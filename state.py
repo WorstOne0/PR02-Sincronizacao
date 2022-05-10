@@ -1,6 +1,6 @@
 from threading import Thread, Lock
-from multiprocessing import Process
 from time import sleep, perf_counter
+import os
 from random import randint
 
 lock = Lock()
@@ -41,6 +41,12 @@ class Team:
         for carThread in carsThreads:
             carThread.start()
 
+        sleep(10)
+
+        print("Tempo max")
+
+        os._exit(1)
+
 
 class Car:
     numLaps = 0
@@ -50,7 +56,7 @@ class Car:
         self.carId = id
 
     def training(self, team, state):
-        while self.numLaps < 1:
+        while self.numLaps < 2:
             sleep(randint(1, 5))
 
             lock.acquire()
@@ -79,5 +85,7 @@ class Car:
                 team.isRunning = False
                 state.running.remove(f"E{team.teamId}C{self.carId}")
 
-                print(f"Terminou a correr E{team.teamId}C{self.carId}")
+                print(
+                    f"Terminou a correr E{team.teamId}C{self.carId}. Volta {self.numLaps}"
+                )
                 lock.release()
